@@ -54,6 +54,12 @@ def semantic_edges (image, distance):
     # creates semantic labels of both edges and objects
     edges_semantic = np.where(edges > 0, 1, 0) # crates image containing only edge regions (label 1)
     object_semantic = np.where(objects > 0, 2, 0) # crates image containing only object regions (label 2)
-    semantic_labels = edges_semantic + object_semantic # creates a single image with semantic labels for both edges and objects
+
+    # create stack
+    channel_list = [edges_semantic, object_semantic]
+    semantic_stack = np.stack(channel_list)  # creates stack from list of images (numpy arrays)
+    
+    # calculates the maximum projection to get back a 2D, labelled image
+    semantic_labels = np.max(semantic_stack, axis = 0)
 
     return semantic_labels.astype('uint8')
